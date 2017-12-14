@@ -14,6 +14,8 @@ class FileController():
             self.remove_task()
         elif len(sys.argv) >= 2 and sys.argv[1] == '-c':
             self.complete_task()
+        else:
+            print("Unsupported argument")
 
     def control_help(self):
         print('Command Line Todo application\n''=============================')
@@ -27,7 +29,6 @@ class FileController():
     def list_tasks(self):
         try:
             list_file = open('todos.txt')
-       
         except:
             list_file = open('todos.txt', 'w')
             list_file.write('List of tasks: ')
@@ -44,14 +45,13 @@ class FileController():
         list_file = open('todos.txt', 'a+')
         if sys.argv[2:] == []:
             print('No task provided')
-
-
         else:
             new_task = sys.argv[2]
             list_file.write(' [ ]')
             list_file.write(new_task)
             list_file.write('\n')
             list_file.close()
+            print('New task added successfully!')
 
     def remove_task(self):
         list_file = open('todos.txt', 'r')
@@ -67,6 +67,7 @@ class FileController():
                 list_file.seek(0)
                 list_file.truncate()
                 list_file.writelines(lines)
+                print('Task successfully removed!')
         except IndexError:
             print('Unable to remove: no index provided')
         except ValueError:
@@ -75,13 +76,22 @@ class FileController():
 
     def complete_task(self):
         list_file = open('todos.txt', 'r')
-        make_complete = int(sys.argv[2])
         lines = list_file.readlines()
-        list_file.close()
-        list_file = open('todos.txt', 'w')
-        lines[make_complete - 1] = ' [x]' + lines[make_complete - 1][3:]
-        list_file.seek(0)
-        list_file.truncate()
-        list_file.writelines(lines)
+        try:
+            if int(sys.argv[2]) > len(lines):
+                print('Unable to check: index is out of bound')
+            else:
+                make_complete = int(sys.argv[2])
+                list_file.close()
+                list_file = open('todos.txt', 'w')
+                lines[make_complete - 1] = ' [x]' + lines[make_complete - 1][4:]
+                list_file.seek(0)
+                list_file.truncate()
+                list_file.writelines(lines)
+                print('Well done!')
+        except IndexError:
+            print('Unable to check: no index provided')
+        except ValueError:
+            print('Unable to check: index is not a number')
 
 control = FileController()
