@@ -44,6 +44,8 @@ class FileController():
         list_file = open('todos.txt', 'a+')
         if sys.argv[2:] == []:
             print('No task provided')
+
+
         else:
             new_task = sys.argv[2]
             list_file.write(' [ ]')
@@ -55,15 +57,20 @@ class FileController():
         list_file = open('todos.txt', 'r')
         lines = list_file.readlines()
         try:
-            remove = int(sys.argv[2])
-            list_file.close()
-            list_file = open('todos.txt', 'w')
-            del lines[remove - 1]
-            list_file.seek(0)
-            list_file.truncate()
-            list_file.writelines(lines)
-        except:
+            if int(sys.argv[2]) > len(lines):
+                print('Unable to remove: index is out of bound')
+            else:
+                remove = int(sys.argv[2])
+                list_file.close()
+                list_file = open('todos.txt', 'w')
+                del lines[remove - 1]
+                list_file.seek(0)
+                list_file.truncate()
+                list_file.writelines(lines)
+        except IndexError:
             print('Unable to remove: no index provided')
+        except ValueError:
+            print('Unable to remove: index is not a number')
         list_file.close()
 
     def complete_task(self):
