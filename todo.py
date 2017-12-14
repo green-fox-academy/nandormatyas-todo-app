@@ -1,16 +1,17 @@
 from sys import *
+import os 
 
 class FileController():
     def __init__(self):
-        if argv[1] == "help":
+        if len(argv) == 2 and argv[1] == "help":
             self.control_help()
-        elif argv[1] == '-l':
+        elif len(argv) == 2 and argv[1] == '-l':
             self.list_tasks()
-        elif argv[1] == '-a':
+        elif len(argv) == 2 and argv[1] == '-a':
             self.add_new_task()
-        elif argv[1] == '-r':
+        elif len(argv) == 2 and argv[1] == '-r':
             self.remove_task()
-        elif argv[1] == '-c':
+        elif len(argv) == 2 and argv[1] == '-c':
             self.complete_task()
 
     def control_help(self):
@@ -29,14 +30,11 @@ class FileController():
         except:
             list_file = open('todos.txt', 'w')
             list_file.write('List of tasks: ')
-        list_file.seek(0)
-        char = list_file.read(1)
-        if not char:
-            print('No todos for today!')
+        if os.stat("todos.txt").st_size == 0:
+            print('No todos for today! :)')
         else:
             list_file = list_file.read()
             print(list_file)
-        #list_file.close()
 
     def add_new_task(self):
         list_file = open('todos.txt', 'a+')
